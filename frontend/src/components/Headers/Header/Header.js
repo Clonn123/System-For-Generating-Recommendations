@@ -17,7 +17,7 @@ function Header({ currentUser, toggleTheme, isDarkMode, onLogout }) {
         <h1><Link to="/" className="header-link" >Стартовая страница</Link></h1> {/* Обертываем надпись в Link и устанавливаем to="/" для перехода на стартовую страницу */}
           <div className="categories">
             <div><Link to="/animes/sort/-score"  className="category">Аниме</Link></div>
-            <div><Link to="/book" className="category">Книги</Link></div>
+            <div><Link to="/data-manga/sort/-score" className="category">Манга</Link></div>
             <div><Link to="/anime/recommendations" className="category">Рекомендации</Link></div>
           </div>
           <SearchBar />
@@ -31,7 +31,7 @@ function Header({ currentUser, toggleTheme, isDarkMode, onLogout }) {
                     <Link to="/profile">Профиль</Link>
                   </li>
                   <li>
-                    <Link to={`/myList/${currentUser.id}/-score`}>Лист</Link>
+                    <Link to={`/myListManga/${currentUser.id}/-score`}>Список</Link>
                   </li>
                   <li>
                     <Link to="/help">Помощь</Link>

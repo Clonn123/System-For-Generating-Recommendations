@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import Content from '../Content/Content';
+import Content from '../Content/ContentManga.js';
 import Nav from '../Navigations/Nav.js';
 import axios from 'axios';
-import '../Content/Content.css';
-import './ContentList.css';
+import '../Content/ContentManga.css';
+import './ContentListManga.css';
 
-function ContentList( {currentUser, searchResults} ) {
+function ContentListManga( {currentUser, searchResults} ) {
   const [dataList, setDataList] = useState([]);
   const [flexDirection, setFlexDirection] = useState('column');
   const [selectedIcon, setSelectedIcon] = useState('infoSort');
@@ -49,7 +49,7 @@ function ContentList( {currentUser, searchResults} ) {
     SetpageNumber(2)
     SettotalCount(2)
     axios
-    .get(`http://127.0.0.1:8000/api/data/${sorttype}/?pageNumber=${1}`)
+    .get(`http://127.0.0.1:8000/api/data-manga/${sorttype}/?pageNumber=${1}`)
     .then(response => {
       setDataList(response.data['data']);
       setIsLoading(false);
@@ -64,7 +64,7 @@ function ContentList( {currentUser, searchResults} ) {
   useEffect(() =>{
     if (fetch && pageNumber <= totalCount){
       axios
-      .get(`http://127.0.0.1:8000/api/data/${sorttype}/?pageNumber=${pageNumber}`)
+      .get(`http://127.0.0.1:8000/api/data-manga/${sorttype}/?pageNumber=${pageNumber}`)
       .then(response => {
         setDataList([...dataList, ...response.data['data']]);
         setIsLoading(false);
@@ -93,19 +93,19 @@ function ContentList( {currentUser, searchResults} ) {
   function handleSortChange(ru_type, type, BT){
     setSort(ru_type);
     setSortNAme(type)
-    navigate(`/animes/sort/${BT}${type}`);
+    navigate(`/data-manga/sort/${BT}${type}`);
   }
   function sortBTChange(type, text, sort){
     setSortBT(type)
     settextSort(text)
-    navigate(`/animes/sort/${type}${sort}`);
+    navigate(`/data-manga/sort/${type}${sort}`);
   }
 
 
   return (
     <div className='head'>
       <div className='notice'>
-        <h1 className='title'>Аниме</h1>
+        <h1 className='title'>Манга</h1>
         <div className='navigation'>
           <img
             style={{ background: selectedIcon === 'defaultSort' ? '#976832' : 'none' }}
@@ -133,7 +133,7 @@ function ContentList( {currentUser, searchResults} ) {
           <div className='downSort' onClick={() => sortBTChange('-', 'По убыванию', sortName)}>По убыванию</div>
           <div className='upSort' onClick={() => sortBTChange('', 'По возростанию', sortName)}>По возростанию</div>
         </div>
-        <div className='notice2' >На данной странице отображены аниме, отсортированные: {sort} и {textSort}</div>
+        <div className='notice2' >На данной странице отображена манга, отсортированная: {sort} и {textSort}</div>
         {isLoading && <h2>Loading...</h2>}
       </div>
 
@@ -147,4 +147,4 @@ function ContentList( {currentUser, searchResults} ) {
   );
 }
 
-export default ContentList;
+export default ContentListManga;
