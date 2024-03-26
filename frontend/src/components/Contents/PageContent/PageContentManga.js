@@ -63,6 +63,15 @@ const PageContentManga = ({ currentUser }) => {
                 shikimori: <strong>{infoList.manga_info2.score}</strong>
               </a>
             </div>
+            <style>
+        {`
+          html {
+            height: 100%;
+            margin: 0 auto;
+            font-family: 'Montserrat', sans-serif;
+          }
+        `}
+      </style>
           </div>
           <div className="SettintContent">
             <RatingComponent currentUser={currentUser} info={infoList.manga_info3}/>

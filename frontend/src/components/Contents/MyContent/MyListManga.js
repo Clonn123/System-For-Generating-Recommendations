@@ -84,7 +84,7 @@ function MyListManga( {currentUser} ) {
             width="32"
             height="32"
             src="https://img.icons8.com/fluency-systems-regular/48/grid-3.png"
-            alt="grid-3"
+            alt="grid"
           />
           <div className='raitingSort' onClick={() => handleSortChange('По рейтингу', 'score', sortBT)}>По рейтингу</div>
           <div className='dataSort' onClick={() => handleSortChange('По дате', 'descriptionData', sortBT)}>По дате</div>

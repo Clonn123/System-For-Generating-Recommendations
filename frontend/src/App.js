@@ -93,11 +93,11 @@ function App() {
           <Route path="/login" element={<LoginForm users={users} onLogin={handleLogin} />} />
           <Route path="/" element={<UserList users={users} />} />
           <Route path="/manga/recommendations" element={<Recommendations currentUser={currentUser} />} />
-          <Route path="/myList/:id/:sorttype" element={<MyList currentUser={currentUser} />} />
+          {/* <Route path="/myList/:id/:sorttype" element={<MyList currentUser={currentUser} />} /> */}
           <Route path="/myListManga/:id/:sorttype" element={<MyListManga currentUser={currentUser} />} />
-          <Route path="/animes/sort/:sorttype" element={<ContentList currentUser={currentUser}/>} />
+          {/* <Route path="/animes/sort/:sorttype" element={<ContentList currentUser={currentUser}/>} /> */}
           <Route path="/data-manga/sort/:sorttype" element={<ContentListManga currentUser={currentUser}/>} />
-          <Route path="/animes/:id" element={<PageContent currentUser={currentUser}/>} />
+          {/* <Route path="/animes/:id" element={<PageContent currentUser={currentUser}/>} /> */}
           <Route path="/mangas/:id" element={<PageContentManga currentUser={currentUser}/>} />
           {currentUser && <Route path="/profile" element={<Profile currentUser={currentUser} onLogout={handleLogout} />} />}
         </Routes>

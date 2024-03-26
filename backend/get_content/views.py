@@ -1,3 +1,5 @@
+from random import Random
+import random
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -29,8 +31,8 @@ from urllib.parse import urlparse, parse_qs
 from django.contrib.auth.hashers import make_password, check_password
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-
-# Users = get_user_model()
+from random import shuffle
+from sklearn.feature_extraction.text import CountVectorizer
 
 class DataAPIView(APIView): 
     def get(self, request, sort):
@@ -1240,7 +1242,6 @@ def get_info_user_manga(id_user):
 def get_full_info(anime_ids_to_exclude):
     full_info = []
     anime_list = Animes.objects.exclude(anime_list_id__in=anime_ids_to_exclude)
-    #anime_list = Animes.objects.all()
     for anime in anime_list:
         anime_serializer = MyModelSerializer(anime)
         info = Anime_info.objects.get(anime_id=anime.anime_list_id)
@@ -1266,9 +1267,7 @@ def get_full_info(anime_ids_to_exclude):
 
 def get_full_info_manga(manga_ids_to_exclude):
     full_info = []
-    manga_list = Mangas.objects.exclude(manga_list_id__in=manga_ids_to_exclude) #проблема тут
-    print(manga_list)
-    #anime_list = Animes.objects.all()
+    manga_list = Mangas.objects.exclude(manga_list_id__in=manga_ids_to_exclude)
     for manga in manga_list:
         manga_serializer = MangaSerializer(manga)
         info = Manga_info.objects.get(manga_id=manga.manga_list_id)
@@ -1321,14 +1320,9 @@ def content_based_filtering_sklearn_manga(user_preferences, manga_data):
     
     manga_descriptions = [f"{manga['type']} {manga['data']} {manga['Genres']} {manga['Themes']} {manga['score_real']} {manga['authors']}" for manga in manga_data]
     user_preferences_descriptions = [f"{manga['type']} {manga['data']} {manga['Genres']} {manga['Themes']} {manga['score_user']} {manga['authors']}" for manga in user_preferences]
-    print(f"\nmanga_descriptions: {manga_descriptions}\n")
-    # print(f"\nuser_preferences_descriptions: {user_preferences_descriptions}\n")
-    print("\nРеки1\n")
     # Создаем TF-IDF векторизаторизацию
-    tfidf_matrix = vectorizer.fit_transform(manga_descriptions) #Видимо здесь ошибка!
-    print("\nРеки2\n")
+    tfidf_matrix = vectorizer.fit_transform(manga_descriptions)
     user_preferences_tfidf = vectorizer.transform(user_preferences_descriptions)
-    print("\nРеки3\n")
     
     # Вычисляем косинусную близость между предпочтениями пользователя и характеристиками аниме
     cosine_similarities = cosine_similarity(user_preferences_tfidf, tfidf_matrix)
@@ -1366,21 +1360,18 @@ def svd_based_filtering(user_preferences, anime_data):
     return recommendations
 
 def svd_based_filtering_manga(user_preferences, manga_data):
-    vectorizer = TfidfVectorizer()
+    vectorizer = CountVectorizer()
     manga_descriptions = [f"{manga['type']} {manga['data']} {manga['Genres']} {manga['Themes']} {manga['score_real']} {manga['authors']}" for manga in manga_data]
     user_preferences_descriptions = [f"{manga['type']} {manga['data']} {manga['Genres']} {manga['Themes']} {manga['score_user']} {manga['authors']}" for manga in user_preferences]
     tfidf_matrix = vectorizer.fit_transform(manga_descriptions)
     user_preferences_tfidf = vectorizer.transform(user_preferences_descriptions)
 
-    # Применяем метод SVD для сокращения размерности
     svd = TruncatedSVD(n_components=100)
     tfidf_svd = svd.fit_transform(tfidf_matrix)
     user_preferences_tfidf_svd = svd.transform(user_preferences_tfidf)
 
-    # Вычисляем косинусную близость между предпочтениями пользователя и характеристиками аниме после сокращения размерности
     cosine_similarities_svd = cosine_similarity(user_preferences_tfidf_svd, tfidf_svd)
 
-    # Получаем индексы аниме, наиболее близкие к предпочтениям пользователя
     similar_manga_indices = cosine_similarities_svd.argsort()[0][::-1]
     recommendations = [manga_data[index] for index in similar_manga_indices]
 
@@ -1391,7 +1382,7 @@ class Recommendations_CBF(APIView):
         id_user = request.GET.get('id_user')
         page_number = request.GET.get('pageNumber')
         method = request.GET.get('method')
-        print(method)
+        print(f"method: {method}")
         
         count = Score.objects.filter(user_id=id_user)
         if len(count) < 20:
@@ -1444,7 +1435,7 @@ class Recommendations_CBF_Manga(APIView):
         id_user = request.GET.get('id_user')
         page_number = request.GET.get('pageNumber')
         method = request.GET.get('method')
-        print(method)
+        print(f"method: {method}")
         
         count = Score_manga.objects.filter(user_id=id_user)
         if len(count) < 20:
@@ -1461,14 +1452,13 @@ class Recommendations_CBF_Manga(APIView):
             'full_info_list': full_info_list,
         } 
         if method == 'CBF':
-            recommendations = content_based_filtering_sklearn_manga(user_info_list, full_info_list)
-            paginator = Paginator(recommendations, 20)
+            recommendationsCBF = content_based_filtering_sklearn_manga(user_info_list, full_info_list)
+            paginator = Paginator(recommendationsCBF, 20)
             page_obj = paginator.get_page(page_number)
         if method == 'SVD':
-            recommendations = svd_based_filtering_manga(user_info_list, full_info_list)
-            paginator = Paginator(recommendations, 20)
-            page_obj = paginator.get_page(page_number)
-        print("\nПрошли4\n")    
+            recommendationsSVD = svd_based_filtering_manga(user_info_list, full_info_list)
+            paginator = Paginator(recommendationsSVD, 20)
+            page_obj = paginator.get_page(page_number) 
         
         serialized_data = []
         for recommendation in page_obj:

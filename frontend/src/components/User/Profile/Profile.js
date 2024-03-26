@@ -101,7 +101,16 @@ function Profile({ currentUser, onLogout }) {
             </div>
           )}
       </div>
-      
+      <style>
+        {`
+          html {
+            height: 100%;
+            margin: 0 auto;
+            font-family: 'Montserrat', sans-serif;
+          }
+        `}
+      </style>
+
       </div>
       <Menu currentUser={currentUser} />
     </div>

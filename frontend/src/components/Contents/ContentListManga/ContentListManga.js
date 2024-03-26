@@ -113,16 +113,16 @@ function ContentListManga( {currentUser, searchResults} ) {
             onClick={defoultFlexDirection}
             width="32"
             height="32"
-            src="https://img.icons8.com/fluency-systems-regular/48/grid.png"
+            src="https://img.icons8.com/parakeet-line/48/grid.png"
             alt="grid"
           />
           <img
             style={{ background: selectedIcon === 'infoSort' ? '#976832' : 'none' }}
             className='infoSort'
             onClick={toggleFlexDirection}
-            width="32"
-            height="32"
-            src="https://img.icons8.com/fluency-systems-regular/48/grid-3.png"
+            width="30"
+            height="30"
+            src="https://img.icons8.com/ios/50/grid-3.png"
             alt="grid-3"
           />
           <div className='raitingSort' onClick={() => handleSortChange('По рейтингу', 'score', sortBT)}>По рейтингу</div>

@@ -26,6 +26,14 @@ function ContentManga({ cont, selectedIcon, currentUser }) {
       className={`${selectedIcon === "infoSort" ? "selected" : "no_selected"}`}
     > 
       <div class="hoverable">
+      <style>
+        {`
+          html {
+            margin: 0 auto;
+            font-family: 'Montserrat', sans-serif;
+          }
+        `}
+      </style>
         <Link className="Link" to={`/mangas/${cont.manga_list_id}`}>
           <div className="item">
             <img src={cont.url_img} alt={cont.title_ru} />
