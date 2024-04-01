@@ -58,9 +58,9 @@ const PageContentManga = ({ currentUser }) => {
             </div>
             <div className="infoB">
               <div className="additional-info"><h4>Рейтинг:</h4></div>
-              <p>ViewNami: <strong>{infoList.score}</strong> </p>
+              <p>Оценка нашего сайта: <strong>{infoList.score}</strong> </p>
               <a className="a" href={`https://shikimori.one/mangas/${infoList.manga_info2.manga_list_id}`}>
-                shikimori: <strong>{infoList.manga_info2.score}</strong>
+                Shikimori: <strong>{infoList.manga_info2.score}</strong>
               </a>
             </div>
             <style>
